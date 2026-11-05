@@ -55,6 +55,7 @@ final class ConfiguredCurrentStaffResolver implements CurrentStaffResolver
 
         if (method_exists($user, 'staff')) {
             $relation = $user->staff();
+
             return method_exists($relation, 'first') ? $relation->first() : null;
         }
 

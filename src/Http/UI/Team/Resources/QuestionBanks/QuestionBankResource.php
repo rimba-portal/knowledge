@@ -9,26 +9,27 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Rimba\Knowledge\Http\UI\Team\Resources\QuestionBanks\Pages\ListQuestionBanks;
-use Rimba\Knowledge\Http\UI\Team\Resources\QuestionBanks\Pages\ViewQuestionBank;
+use Rimba\Knowledge\Enums\QuestionBankStatus;
 use Rimba\Knowledge\Http\UI\Team\Resources\QuestionBanks\Pages\CreateQuestionBank;
 use Rimba\Knowledge\Http\UI\Team\Resources\QuestionBanks\Pages\EditQuestionBank;
+use Rimba\Knowledge\Http\UI\Team\Resources\QuestionBanks\Pages\ListQuestionBanks;
+use Rimba\Knowledge\Http\UI\Team\Resources\QuestionBanks\Pages\ViewQuestionBank;
 use Rimba\Knowledge\Models\QuestionBank;
 
 class QuestionBankResource extends Resource
 {
     protected static ?string $model = QuestionBank::class;
+
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -36,7 +37,7 @@ class QuestionBankResource extends Resource
         return $schema->components([
             Select::make('document_revision_id')->relationship('documentRevision', 'title')->required()->searchable()->preload(),
             TextInput::make('name')->required(),
-            Select::make('status')->options(\Rimba\Knowledge\Enums\QuestionBankStatus::class)->required(),
+            Select::make('status')->options(QuestionBankStatus::class)->required(),
             DateTimePicker::make('reviewed_at'),
         ]);
     }
@@ -49,7 +50,7 @@ class QuestionBankResource extends Resource
             TextColumn::make('name')->searchable(),
             TextColumn::make('status')->badge(),
             TextColumn::make('questions_count')->counts('questions')->label('Questions'),
-        ])->recordActions([ViewAction::make(), EditAction::make(),]);
+        ])->recordActions([ViewAction::make(), EditAction::make()]);
     }
 
     public static function getPages(): array

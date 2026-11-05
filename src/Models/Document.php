@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Rimba\Knowledge\Enums\DocumentStatus;
 use Rimba\Organization\Models\OrgTeam;
 use Rimba\Organization\Models\OrgUnit;
 
@@ -34,18 +35,38 @@ class Document extends Model
     protected function casts(): array
     {
         return [
-            'status' => \Rimba\Knowledge\Enums\DocumentStatus::class,
+            'status' => DocumentStatus::class,
             'external_attributes' => 'array',
         ];
     }
 
+    public function documentType(): BelongsTo
+    {
+        return $this->belongsTo(DocumentType::class);
+    }
 
-    public function documentType(): BelongsTo { return $this->belongsTo(DocumentType::class); }
-    public function orgUnit(): BelongsTo { return $this->belongsTo(OrgUnit::class); }
-    public function orgTeam(): BelongsTo { return $this->belongsTo(OrgTeam::class); }
-    public function currentRevision(): BelongsTo { return $this->belongsTo(DocumentRevision::class, 'current_revision_id'); }
-    public function revisions(): HasMany { return $this->hasMany(DocumentRevision::class); }
-    public function links(): HasMany { return $this->hasMany(DocumentLink::class); }
+    public function orgUnit(): BelongsTo
+    {
+        return $this->belongsTo(OrgUnit::class);
+    }
 
+    public function orgTeam(): BelongsTo
+    {
+        return $this->belongsTo(OrgTeam::class);
+    }
 
+    public function currentRevision(): BelongsTo
+    {
+        return $this->belongsTo(DocumentRevision::class, 'current_revision_id');
+    }
+
+    public function revisions(): HasMany
+    {
+        return $this->hasMany(DocumentRevision::class);
+    }
+
+    public function links(): HasMany
+    {
+        return $this->hasMany(DocumentLink::class);
+    }
 }

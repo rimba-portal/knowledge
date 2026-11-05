@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Packstub\Flow\Models\WorkflowRun;
+use Rimba\Knowledge\Enums\RevisionStatus;
 use Rimba\People\Models\Staff;
 use Rimba\Request\Concerns\HasWorkflows;
 
@@ -40,7 +41,7 @@ class DocumentRevision extends Model
     protected function casts(): array
     {
         return [
-            'status' => \Rimba\Knowledge\Enums\RevisionStatus::class,
+            'status' => RevisionStatus::class,
             'submitted_at' => 'datetime',
             'approved_at' => 'datetime',
             'issued_at' => 'datetime',
@@ -49,13 +50,33 @@ class DocumentRevision extends Model
         ];
     }
 
+    public function document(): BelongsTo
+    {
+        return $this->belongsTo(Document::class);
+    }
 
-    public function document(): BelongsTo { return $this->belongsTo(Document::class); }
-    public function files(): HasMany { return $this->hasMany(DocumentFile::class); }
-    public function questionBanks(): HasMany { return $this->hasMany(QuestionBank::class); }
-    public function approver(): BelongsTo { return $this->belongsTo(Staff::class, 'approved_by'); }
-    public function publisher(): BelongsTo { return $this->belongsTo(Staff::class, 'published_by'); }
-    public function workflowRun(): BelongsTo { return $this->belongsTo(WorkflowRun::class, 'workflow_run_id'); }
+    public function files(): HasMany
+    {
+        return $this->hasMany(DocumentFile::class);
+    }
 
+    public function questionBanks(): HasMany
+    {
+        return $this->hasMany(QuestionBank::class);
+    }
 
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class, 'approved_by');
+    }
+
+    public function publisher(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class, 'published_by');
+    }
+
+    public function workflowRun(): BelongsTo
+    {
+        return $this->belongsTo(WorkflowRun::class, 'workflow_run_id');
+    }
 }

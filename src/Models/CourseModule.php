@@ -29,9 +29,13 @@ class CourseModule extends Model
         ];
     }
 
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
 
-    public function course(): BelongsTo { return $this->belongsTo(Course::class); }
-    public function learningModule(): BelongsTo { return $this->belongsTo(LearningModule::class); }
-
-
+    public function learningModule(): BelongsTo
+    {
+        return $this->belongsTo(LearningModule::class);
+    }
 }

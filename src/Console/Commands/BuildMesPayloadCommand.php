@@ -30,10 +30,12 @@ final class BuildMesPayloadCommand extends Command
 
         if ($payload === null || (($this->argument('type') === 'work-document-reference') && blank($this->option('work-record')))) {
             $this->components->error('Unsupported type or missing --work-record value.');
+
             return self::FAILURE;
         }
 
-        $this->line((string) json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+        $this->line(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
+
         return self::SUCCESS;
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rimba\Knowledge\Enums\LearningStatus;
 use Rimba\Organization\Models\OrgTeam;
 use Rimba\Organization\Models\OrgUnit;
 
@@ -30,16 +31,32 @@ class Course extends Model
     protected function casts(): array
     {
         return [
-            'status' => \Rimba\Knowledge\Enums\LearningStatus::class,
+            'status' => LearningStatus::class,
         ];
     }
 
+    public function orgUnit(): BelongsTo
+    {
+        return $this->belongsTo(OrgUnit::class);
+    }
 
-    public function orgUnit(): BelongsTo { return $this->belongsTo(OrgUnit::class); }
-    public function orgTeam(): BelongsTo { return $this->belongsTo(OrgTeam::class); }
-    public function modules(): BelongsToMany { return $this->belongsToMany(LearningModule::class, 'kn_course_modules')->withPivot(['sequence','is_required'])->withTimestamps(); }
-    public function courseModules(): HasMany { return $this->hasMany(CourseModule::class); }
-    public function assignments(): HasMany { return $this->hasMany(CourseAssignment::class); }
+    public function orgTeam(): BelongsTo
+    {
+        return $this->belongsTo(OrgTeam::class);
+    }
 
+    public function modules(): BelongsToMany
+    {
+        return $this->belongsToMany(LearningModule::class, 'kn_course_modules')->withPivot(['sequence', 'is_required'])->withTimestamps();
+    }
 
+    public function courseModules(): HasMany
+    {
+        return $this->hasMany(CourseModule::class);
+    }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(CourseAssignment::class);
+    }
 }

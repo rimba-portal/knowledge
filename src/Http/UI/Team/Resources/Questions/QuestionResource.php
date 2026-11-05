@@ -7,7 +7,6 @@ namespace Rimba\Knowledge\Http\UI\Team\Resources\Questions;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -18,24 +17,28 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Rimba\Knowledge\Http\UI\Team\Resources\Questions\Pages\ListQuestions;
-use Rimba\Knowledge\Http\UI\Team\Resources\Questions\Pages\ViewQuestion;
+use Rimba\Knowledge\Enums\QuestionType;
 use Rimba\Knowledge\Http\UI\Team\Resources\Questions\Pages\CreateQuestion;
 use Rimba\Knowledge\Http\UI\Team\Resources\Questions\Pages\EditQuestion;
+use Rimba\Knowledge\Http\UI\Team\Resources\Questions\Pages\ListQuestions;
+use Rimba\Knowledge\Http\UI\Team\Resources\Questions\Pages\ViewQuestion;
 use Rimba\Knowledge\Models\Question;
 
 class QuestionResource extends Resource
 {
     protected static ?string $model = Question::class;
+
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
     protected static ?string $recordTitleAttribute = 'prompt';
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
             Select::make('question_bank_id')->relationship('questionBank', 'name')->required()->searchable()->preload(),
-            Select::make('type')->options(\Rimba\Knowledge\Enums\QuestionType::class)->required(),
+            Select::make('type')->options(QuestionType::class)->required(),
             Textarea::make('prompt')->required()->columnSpanFull(),
             Textarea::make('explanation')->columnSpanFull(),
             TextInput::make('points')->numeric()->minValue(0.01)->default(1)->required(),
@@ -53,7 +56,7 @@ class QuestionResource extends Resource
             TextColumn::make('points'),
             TextColumn::make('options_count')->counts('options')->label('Options'),
             IconColumn::make('is_active')->boolean(),
-        ])->recordActions([ViewAction::make(), EditAction::make(),]);
+        ])->recordActions([ViewAction::make(), EditAction::make()]);
     }
 
     public static function getPages(): array

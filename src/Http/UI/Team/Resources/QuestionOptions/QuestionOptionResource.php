@@ -7,7 +7,6 @@ namespace Rimba\Knowledge\Http\UI\Team\Resources\QuestionOptions;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -18,17 +17,20 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Rimba\Knowledge\Http\UI\Team\Resources\QuestionOptions\Pages\ListQuestionOptions;
-use Rimba\Knowledge\Http\UI\Team\Resources\QuestionOptions\Pages\ViewQuestionOption;
 use Rimba\Knowledge\Http\UI\Team\Resources\QuestionOptions\Pages\CreateQuestionOption;
 use Rimba\Knowledge\Http\UI\Team\Resources\QuestionOptions\Pages\EditQuestionOption;
+use Rimba\Knowledge\Http\UI\Team\Resources\QuestionOptions\Pages\ListQuestionOptions;
+use Rimba\Knowledge\Http\UI\Team\Resources\QuestionOptions\Pages\ViewQuestionOption;
 use Rimba\Knowledge\Models\QuestionOption;
 
 class QuestionOptionResource extends Resource
 {
     protected static ?string $model = QuestionOption::class;
+
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
     protected static ?string $recordTitleAttribute = 'answer';
 
     public static function form(Schema $schema): Schema
@@ -48,7 +50,7 @@ class QuestionOptionResource extends Resource
             TextColumn::make('answer')->limit(80)->searchable(),
             IconColumn::make('is_correct')->boolean(),
             TextColumn::make('sequence')->sortable(),
-        ])->recordActions([ViewAction::make(), EditAction::make(),]);
+        ])->recordActions([ViewAction::make(), EditAction::make()]);
     }
 
     public static function getPages(): array

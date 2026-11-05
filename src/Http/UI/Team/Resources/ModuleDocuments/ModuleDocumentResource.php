@@ -7,9 +7,7 @@ namespace Rimba\Knowledge\Http\UI\Team\Resources\ModuleDocuments;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
@@ -18,17 +16,20 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Rimba\Knowledge\Http\UI\Team\Resources\ModuleDocuments\Pages\ListModuleDocuments;
-use Rimba\Knowledge\Http\UI\Team\Resources\ModuleDocuments\Pages\ViewModuleDocument;
 use Rimba\Knowledge\Http\UI\Team\Resources\ModuleDocuments\Pages\CreateModuleDocument;
 use Rimba\Knowledge\Http\UI\Team\Resources\ModuleDocuments\Pages\EditModuleDocument;
+use Rimba\Knowledge\Http\UI\Team\Resources\ModuleDocuments\Pages\ListModuleDocuments;
+use Rimba\Knowledge\Http\UI\Team\Resources\ModuleDocuments\Pages\ViewModuleDocument;
 use Rimba\Knowledge\Models\ModuleDocument;
 
 class ModuleDocumentResource extends Resource
 {
     protected static ?string $model = ModuleDocument::class;
+
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
     protected static ?string $recordTitleAttribute = 'id';
 
     public static function form(Schema $schema): Schema
@@ -50,7 +51,7 @@ class ModuleDocumentResource extends Resource
             TextColumn::make('documentRevision.revision_code')->label('Revision'),
             TextColumn::make('sequence')->sortable(),
             IconColumn::make('is_required')->boolean(),
-        ])->recordActions([ViewAction::make(), EditAction::make(),]);
+        ])->recordActions([ViewAction::make(), EditAction::make()]);
     }
 
     public static function getPages(): array

@@ -12,13 +12,14 @@ use RuntimeException;
 
 final class SubmitDocumentRevisionForApproval
 {
-    public function __construct(private readonly DocumentRevisionApprovalGateway $gateway) {}
+    public function __construct(private readonly DocumentRevisionApprovalGateway $documentRevisionApprovalGateway) {}
 
     public function handle(DocumentRevision $revision): DocumentRevision
     {
         if ($revision->status !== RevisionStatus::Draft && $revision->status !== RevisionStatus::Rejected) {
             throw new RuntimeException('Only draft or rejected revisions may be submitted.');
         }
+
         if ($revision->files()->count() === 0) {
             throw new RuntimeException('A document revision must have at least one file before submission.');
         }
@@ -31,7 +32,7 @@ final class SubmitDocumentRevisionForApproval
                 'approved_by' => null,
             ])->save();
 
-            $runId = $this->gateway->submit($revision->fresh(['document']));
+            $runId = $this->documentRevisionApprovalGateway->submit($revision->fresh(['document']));
             if ($runId !== null) {
                 $revision->forceFill(['workflow_run_id' => $runId])->save();
             }

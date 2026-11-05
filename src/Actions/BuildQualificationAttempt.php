@@ -32,7 +32,7 @@ final class BuildQualificationAttempt
         }
 
         return DB::transaction(function () use ($test, $staff, $staffUuid): QualificationAttempt {
-            $attempt = QualificationAttempt::query()->create([
+            $qualificationAttempt = QualificationAttempt::query()->create([
                 'qualification_test_id' => $test->getKey(),
                 'staff_id' => $staff->getKey(),
                 'staff_uuid' => $staffUuid,
@@ -72,7 +72,7 @@ final class BuildQualificationAttempt
                     }
 
                     QualificationAnswer::query()->create([
-                        'qualification_attempt_id' => $attempt->getKey(),
+                        'qualification_attempt_id' => $qualificationAttempt->getKey(),
                         'question_id' => $question->getKey(),
                         'question_uuid' => $question->getKey(),
                         'question_type' => $question->type->value,
@@ -87,8 +87,9 @@ final class BuildQualificationAttempt
                 }
             }
 
-            $attempt->forceFill(['question_count' => $sequence, 'total_points' => $totalPoints])->save();
-            return $attempt->refresh()->load('answers');
+            $qualificationAttempt->forceFill(['question_count' => $sequence, 'total_points' => $totalPoints])->save();
+
+            return $qualificationAttempt->refresh()->load('answers');
         });
     }
 }

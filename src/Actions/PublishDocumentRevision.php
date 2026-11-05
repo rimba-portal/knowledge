@@ -43,10 +43,12 @@ final class PublishDocumentRevision
             ])->save();
 
             $revision->document()->update(['current_revision_id' => $revision->getKey(), 'status' => 'active']);
+
             return $revision->refresh();
         });
 
         DocumentRevisionBecameEffective::dispatch($published);
+
         return $published;
     }
 }

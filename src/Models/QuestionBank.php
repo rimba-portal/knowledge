@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rimba\Knowledge\Enums\QuestionBankStatus;
 use Rimba\People\Models\Staff;
 
 #[Table(name: 'kn_question_banks')]
@@ -27,15 +28,23 @@ class QuestionBank extends Model
     protected function casts(): array
     {
         return [
-            'status' => \Rimba\Knowledge\Enums\QuestionBankStatus::class,
+            'status' => QuestionBankStatus::class,
             'reviewed_at' => 'datetime',
         ];
     }
 
+    public function documentRevision(): BelongsTo
+    {
+        return $this->belongsTo(DocumentRevision::class);
+    }
 
-    public function documentRevision(): BelongsTo { return $this->belongsTo(DocumentRevision::class); }
-    public function questions(): HasMany { return $this->hasMany(Question::class); }
-    public function reviewer(): BelongsTo { return $this->belongsTo(Staff::class, 'reviewed_by'); }
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
+    }
 
-
+    public function reviewer(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class, 'reviewed_by');
+    }
 }

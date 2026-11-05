@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Rimba\Knowledge\Enums\AssignmentStatus;
 use Rimba\People\Models\Staff;
 
 #[Table(name: 'kn_course_assignments')]
@@ -32,17 +33,25 @@ class CourseAssignment extends Model
         return [
             'assigned_at' => 'datetime',
             'due_at' => 'datetime',
-            'status' => \Rimba\Knowledge\Enums\AssignmentStatus::class,
+            'status' => AssignmentStatus::class,
             'progress_percentage' => 'decimal:2',
             'completed_at' => 'datetime',
             'metadata' => 'array',
         ];
     }
 
+    public function course(): BelongsTo
+    {
+        return $this->belongsTo(Course::class);
+    }
 
-    public function course(): BelongsTo { return $this->belongsTo(Course::class); }
-    public function staff(): BelongsTo { return $this->belongsTo(Staff::class); }
-    public function assigner(): BelongsTo { return $this->belongsTo(Staff::class, 'assigned_by'); }
+    public function staff(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class);
+    }
 
-
+    public function assigner(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class, 'assigned_by');
+    }
 }

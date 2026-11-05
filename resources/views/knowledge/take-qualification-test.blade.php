@@ -10,9 +10,16 @@
                         @foreach ($answer->options_snapshot as $option)
                             <label class="flex gap-2">
                                 @if ($answer->question_type === 'multiple_choice')
-                                    <input type="checkbox" wire:model="responses.{{ $answer->question_uuid }}.{{ $option['id'] }}" />
+                                    <input
+                                        type="checkbox"
+                                        wire:model="responses.{{ $answer->question_uuid }}.{{ $option['id'] }}"
+                                    />
                                 @else
-                                    <input type="radio" value="{{ $option['id'] }}" wire:model="responses.{{ $answer->question_uuid }}" />
+                                    <input
+                                        type="radio"
+                                        value="{{ $option['id'] }}"
+                                        wire:model="responses.{{ $answer->question_uuid }}"
+                                    />
                                 @endif
                                 <span>{{ $option['answer'] }}</span>
                             </label>

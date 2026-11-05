@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rimba\Knowledge\Enums\QuestionType;
 
 #[Table(name: 'kn_questions')]
 #[Fillable([
@@ -29,7 +30,7 @@ class Question extends Model
     protected function casts(): array
     {
         return [
-            'type' => \Rimba\Knowledge\Enums\QuestionType::class,
+            'type' => QuestionType::class,
             'points' => 'decimal:2',
             'sequence' => 'integer',
             'is_active' => 'boolean',
@@ -37,9 +38,13 @@ class Question extends Model
         ];
     }
 
+    public function questionBank(): BelongsTo
+    {
+        return $this->belongsTo(QuestionBank::class);
+    }
 
-    public function questionBank(): BelongsTo { return $this->belongsTo(QuestionBank::class); }
-    public function options(): HasMany { return $this->hasMany(QuestionOption::class)->orderBy('sequence'); }
-
-
+    public function options(): HasMany
+    {
+        return $this->hasMany(QuestionOption::class)->orderBy('sequence');
+    }
 }

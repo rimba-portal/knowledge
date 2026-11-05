@@ -29,8 +29,8 @@ class DocumentLink extends Model
         ];
     }
 
-
-    public function document(): BelongsTo { return $this->belongsTo(Document::class); }
-
-
+    public function document(): BelongsTo
+    {
+        return $this->belongsTo(Document::class);
+    }
 }

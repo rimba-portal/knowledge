@@ -7,8 +7,6 @@ namespace Rimba\Knowledge\Http\UI\Team\Resources\DocumentTypes;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -18,17 +16,20 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Rimba\Knowledge\Http\UI\Team\Resources\DocumentTypes\Pages\ListDocumentTypes;
-use Rimba\Knowledge\Http\UI\Team\Resources\DocumentTypes\Pages\ViewDocumentType;
 use Rimba\Knowledge\Http\UI\Team\Resources\DocumentTypes\Pages\CreateDocumentType;
 use Rimba\Knowledge\Http\UI\Team\Resources\DocumentTypes\Pages\EditDocumentType;
+use Rimba\Knowledge\Http\UI\Team\Resources\DocumentTypes\Pages\ListDocumentTypes;
+use Rimba\Knowledge\Http\UI\Team\Resources\DocumentTypes\Pages\ViewDocumentType;
 use Rimba\Knowledge\Models\DocumentType;
 
 class DocumentTypeResource extends Resource
 {
     protected static ?string $model = DocumentType::class;
+
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -47,7 +48,7 @@ class DocumentTypeResource extends Resource
             TextColumn::make('code')->searchable(),
             TextColumn::make('name')->searchable(),
             IconColumn::make('is_active')->boolean(),
-        ])->recordActions([ViewAction::make(), EditAction::make(),]);
+        ])->recordActions([ViewAction::make(), EditAction::make()]);
     }
 
     public static function getPages(): array

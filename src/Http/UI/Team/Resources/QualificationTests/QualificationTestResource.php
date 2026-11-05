@@ -7,28 +7,29 @@ namespace Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\ListQualificationTests;
-use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\ViewQualificationTest;
+use Rimba\Knowledge\Enums\LearningStatus;
 use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\CreateQualificationTest;
 use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\EditQualificationTest;
+use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\ListQualificationTests;
+use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\ViewQualificationTest;
 use Rimba\Knowledge\Models\QualificationTest;
 
 class QualificationTestResource extends Resource
 {
     protected static ?string $model = QualificationTest::class;
+
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -44,7 +45,7 @@ class QualificationTestResource extends Resource
             TextInput::make('question_limit')->numeric()->minValue(1),
             TextInput::make('attempt_limit')->numeric()->minValue(1),
             TextInput::make('validity_days')->numeric()->minValue(1),
-            Select::make('status')->options(\Rimba\Knowledge\Enums\LearningStatus::class)->required(),
+            Select::make('status')->options(LearningStatus::class)->required(),
         ]);
     }
 
@@ -56,7 +57,7 @@ class QualificationTestResource extends Resource
             TextColumn::make('passing_score')->suffix('%'),
             TextColumn::make('status')->badge(),
             TextColumn::make('review_required_at')->dateTime(),
-        ])->recordActions([ViewAction::make(), EditAction::make(),]);
+        ])->recordActions([ViewAction::make(), EditAction::make()]);
     }
 
     public static function getPages(): array

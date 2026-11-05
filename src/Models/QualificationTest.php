@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rimba\Knowledge\Enums\LearningStatus;
 use Rimba\Organization\Models\OrgTeam;
 use Rimba\Organization\Models\OrgUnit;
 
@@ -39,16 +40,28 @@ class QualificationTest extends Model
             'question_limit' => 'integer',
             'attempt_limit' => 'integer',
             'validity_days' => 'integer',
-            'status' => \Rimba\Knowledge\Enums\LearningStatus::class,
+            'status' => LearningStatus::class,
             'review_required_at' => 'datetime',
         ];
     }
 
+    public function orgUnit(): BelongsTo
+    {
+        return $this->belongsTo(OrgUnit::class);
+    }
 
-    public function orgUnit(): BelongsTo { return $this->belongsTo(OrgUnit::class); }
-    public function orgTeam(): BelongsTo { return $this->belongsTo(OrgTeam::class); }
-    public function materials(): HasMany { return $this->hasMany(QualificationTestMaterial::class); }
-    public function attempts(): HasMany { return $this->hasMany(QualificationAttempt::class); }
+    public function orgTeam(): BelongsTo
+    {
+        return $this->belongsTo(OrgTeam::class);
+    }
 
+    public function materials(): HasMany
+    {
+        return $this->hasMany(QualificationTestMaterial::class);
+    }
 
+    public function attempts(): HasMany
+    {
+        return $this->hasMany(QualificationAttempt::class);
+    }
 }

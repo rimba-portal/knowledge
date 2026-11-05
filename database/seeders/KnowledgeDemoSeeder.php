@@ -19,13 +19,14 @@ final class KnowledgeDemoSeeder extends Seeder
         $orgUnit = OrgUnit::query()->first();
         if ($orgUnit === null) {
             $this->command?->warn('Knowledge demo seed skipped: create an OrgUnit first.');
+
             return;
         }
 
-        $type = DocumentType::query()->firstOrCreate(['code' => 'WI'], ['name' => 'Work Instruction', 'is_active' => true]);
+        $documentType = DocumentType::query()->firstOrCreate(['code' => 'WI'], ['name' => 'Work Instruction', 'is_active' => true]);
         $document = Document::query()->firstOrCreate(['code' => 'WI-DEMO-001'], [
             'name' => 'Demonstration Work Instruction',
-            'document_type_id' => $type->getKey(),
+            'document_type_id' => $documentType->getKey(),
             'org_unit_id' => $orgUnit->getKey(),
             'status' => DocumentStatus::Draft,
         ]);

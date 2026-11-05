@@ -7,28 +7,29 @@ namespace Rimba\Knowledge\Http\UI\Team\Resources\Documents;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Rimba\Knowledge\Http\UI\Team\Resources\Documents\Pages\ListDocuments;
-use Rimba\Knowledge\Http\UI\Team\Resources\Documents\Pages\ViewDocument;
+use Rimba\Knowledge\Enums\DocumentStatus;
 use Rimba\Knowledge\Http\UI\Team\Resources\Documents\Pages\CreateDocument;
 use Rimba\Knowledge\Http\UI\Team\Resources\Documents\Pages\EditDocument;
+use Rimba\Knowledge\Http\UI\Team\Resources\Documents\Pages\ListDocuments;
+use Rimba\Knowledge\Http\UI\Team\Resources\Documents\Pages\ViewDocument;
 use Rimba\Knowledge\Models\Document;
 
 class DocumentResource extends Resource
 {
     protected static ?string $model = Document::class;
+
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
@@ -40,7 +41,7 @@ class DocumentResource extends Resource
             Select::make('org_unit_id')->relationship('orgUnit', 'name')->required()->searchable()->preload(),
             Select::make('org_team_id')->relationship('orgTeam', 'name')->searchable()->preload(),
             Textarea::make('description')->columnSpanFull(),
-            Select::make('status')->options(\Rimba\Knowledge\Enums\DocumentStatus::class)->required(),
+            Select::make('status')->options(DocumentStatus::class)->required(),
         ]);
     }
 
@@ -52,7 +53,7 @@ class DocumentResource extends Resource
             TextColumn::make('orgUnit.name')->label('Owner'),
             TextColumn::make('orgTeam.name')->label('Managing team'),
             TextColumn::make('status')->badge(),
-        ])->recordActions([ViewAction::make(), EditAction::make(),]);
+        ])->recordActions([ViewAction::make(), EditAction::make()]);
     }
 
     public static function getPages(): array

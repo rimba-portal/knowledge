@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rimba\Knowledge\Enums\LearningStatus;
 use Rimba\Organization\Models\OrgTeam;
 use Rimba\Organization\Models\OrgUnit;
 
@@ -31,16 +32,28 @@ class LearningModule extends Model
     protected function casts(): array
     {
         return [
-            'status' => \Rimba\Knowledge\Enums\LearningStatus::class,
+            'status' => LearningStatus::class,
             'estimated_minutes' => 'integer',
         ];
     }
 
+    public function orgUnit(): BelongsTo
+    {
+        return $this->belongsTo(OrgUnit::class);
+    }
 
-    public function orgUnit(): BelongsTo { return $this->belongsTo(OrgUnit::class); }
-    public function orgTeam(): BelongsTo { return $this->belongsTo(OrgTeam::class); }
-    public function moduleDocuments(): HasMany { return $this->hasMany(ModuleDocument::class); }
-    public function documentRevisions(): BelongsToMany { return $this->belongsToMany(DocumentRevision::class, 'kn_module_documents')->withPivot(['sequence','is_required','completion_rule'])->withTimestamps(); }
+    public function orgTeam(): BelongsTo
+    {
+        return $this->belongsTo(OrgTeam::class);
+    }
 
+    public function moduleDocuments(): HasMany
+    {
+        return $this->hasMany(ModuleDocument::class);
+    }
 
+    public function documentRevisions(): BelongsToMany
+    {
+        return $this->belongsToMany(DocumentRevision::class, 'kn_module_documents')->withPivot(['sequence', 'is_required', 'completion_rule'])->withTimestamps();
+    }
 }

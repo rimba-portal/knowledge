@@ -30,9 +30,13 @@ class ModuleDocument extends Model
         ];
     }
 
+    public function learningModule(): BelongsTo
+    {
+        return $this->belongsTo(LearningModule::class);
+    }
 
-    public function learningModule(): BelongsTo { return $this->belongsTo(LearningModule::class); }
-    public function documentRevision(): BelongsTo { return $this->belongsTo(DocumentRevision::class); }
-
-
+    public function documentRevision(): BelongsTo
+    {
+        return $this->belongsTo(DocumentRevision::class);
+    }
 }

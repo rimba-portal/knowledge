@@ -14,6 +14,7 @@ final class ApplyDocumentRevisionDecision
     {
         $this->ensurePending($revision);
         $revision->forceFill(['status' => RevisionStatus::Approved, 'approved_at' => now(), 'approved_by' => $staffId])->save();
+
         return $revision->refresh();
     }
 
@@ -21,6 +22,7 @@ final class ApplyDocumentRevisionDecision
     {
         $this->ensurePending($revision);
         $revision->forceFill(['status' => RevisionStatus::Rejected, 'approved_at' => null, 'approved_by' => $staffId])->save();
+
         return $revision->refresh();
     }
 

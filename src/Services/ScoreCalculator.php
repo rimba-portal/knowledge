@@ -12,6 +12,7 @@ final class ScoreCalculator
         $normalize = static function (array $values): array {
             $values = array_values(array_unique(array_map('strval', $values)));
             sort($values);
+
             return $values;
         };
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rimba\Knowledge\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -26,11 +27,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'is_correct',
     'sequence',
 ])]
+#[Hidden(['correct_option_ids'])]
 class QualificationAnswer extends Model
 {
     use HasUuids;
-
-    protected $hidden = ['correct_option_ids'];
 
     protected function casts(): array
     {
@@ -45,9 +45,13 @@ class QualificationAnswer extends Model
         ];
     }
 
+    public function qualificationAttempt(): BelongsTo
+    {
+        return $this->belongsTo(QualificationAttempt::class);
+    }
 
-    public function qualificationAttempt(): BelongsTo { return $this->belongsTo(QualificationAttempt::class); }
-    public function question(): BelongsTo { return $this->belongsTo(Question::class); }
-
-
+    public function question(): BelongsTo
+    {
+        return $this->belongsTo(Question::class);
+    }
 }

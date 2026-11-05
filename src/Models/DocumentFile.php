@@ -34,8 +34,8 @@ class DocumentFile extends Model
         ];
     }
 
-
-    public function revision(): BelongsTo { return $this->belongsTo(DocumentRevision::class, 'document_revision_id'); }
-
-
+    public function revision(): BelongsTo
+    {
+        return $this->belongsTo(DocumentRevision::class, 'document_revision_id');
+    }
 }

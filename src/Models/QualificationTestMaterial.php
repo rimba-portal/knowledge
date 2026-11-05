@@ -29,9 +29,13 @@ class QualificationTestMaterial extends Model
         ];
     }
 
+    public function qualificationTest(): BelongsTo
+    {
+        return $this->belongsTo(QualificationTest::class);
+    }
 
-    public function qualificationTest(): BelongsTo { return $this->belongsTo(QualificationTest::class); }
-    public function documentRevision(): BelongsTo { return $this->belongsTo(DocumentRevision::class); }
-
-
+    public function documentRevision(): BelongsTo
+    {
+        return $this->belongsTo(DocumentRevision::class);
+    }
 }

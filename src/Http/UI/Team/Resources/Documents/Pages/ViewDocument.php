@@ -1,12 +1,19 @@
 <?php
 
 declare(strict_types=1);
+
 namespace Rimba\Knowledge\Http\UI\Team\Resources\Documents\Pages;
+
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Rimba\Knowledge\Http\UI\Team\Resources\Documents\DocumentResource;
+
 class ViewDocument extends ViewRecord
 {
     protected static string $resource = DocumentResource::class;
-    protected function getHeaderActions(): array { return [EditAction::make()]; }
+
+    protected function getHeaderActions(): array
+    {
+        return [EditAction::make()];
+    }
 }

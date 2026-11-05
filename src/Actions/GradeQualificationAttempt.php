@@ -13,7 +13,7 @@ use RuntimeException;
 
 final class GradeQualificationAttempt
 {
-    public function __construct(private readonly ScoreCalculator $calculator) {}
+    public function __construct(private readonly ScoreCalculator $scoreCalculator) {}
 
     /** @param array<string, mixed> $responses */
     public function handle(QualificationAttempt $attempt, array $responses): QualificationAttempt
@@ -27,23 +27,24 @@ final class GradeQualificationAttempt
             $earned = 0.0;
             foreach ($attempt->answers()->get() as $answer) {
                 $raw = $responses[(string) $answer->question_uuid] ?? [];
-                $selected = is_array($raw) ? array_keys(array_filter($raw, fn ($value) => $value !== false && $value !== null && $value !== '')) : [$raw];
+                $selected = is_array($raw) ? array_keys(array_filter($raw, fn ($value): bool => ! in_array($value, [false, null, ''], true))) : [$raw];
                 if (array_is_list((array) $raw)) {
                     $selected = (array) $raw;
                 }
+
                 $selected = array_values(array_filter(array_map('strval', $selected)));
                 $allowed = collect($answer->options_snapshot)->pluck('id')->map('strval')->all();
                 if (array_diff($selected, $allowed) !== []) {
                     throw new RuntimeException('A submitted answer contains an option outside the frozen question snapshot.');
                 }
 
-                $isCorrect = $this->calculator->isExactMatch($selected, $answer->correct_option_ids);
+                $isCorrect = $this->scoreCalculator->isExactMatch($selected, $answer->correct_option_ids);
                 $points = $isCorrect ? (float) $answer->points : 0.0;
                 $answer->forceFill(['selected_option_ids' => $selected, 'earned_points' => $points, 'is_correct' => $isCorrect])->save();
                 $earned += $points;
             }
 
-            $score = $this->calculator->percentage($earned, (float) $attempt->total_points);
+            $score = $this->scoreCalculator->percentage($earned, (float) $attempt->total_points);
             $passed = $score >= (float) $attempt->passing_score_snapshot;
             $validityDays = $attempt->qualificationTest->validity_days;
             $attempt->forceFill([
@@ -59,6 +60,7 @@ final class GradeQualificationAttempt
         });
 
         QualificationAttemptCompleted::dispatch($graded);
+
         return $graded;
     }
 }

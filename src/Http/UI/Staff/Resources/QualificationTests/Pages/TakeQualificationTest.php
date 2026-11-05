@@ -17,9 +17,11 @@ final class TakeQualificationTest extends Page
     use InteractsWithRecord;
 
     protected static string $resource = QualificationTestResource::class;
+
     protected string $view = 'bites::knowledge.take-qualification-test';
 
     public ?string $attemptId = null;
+
     /** @var array<string, mixed> */
     public array $responses = [];
 
