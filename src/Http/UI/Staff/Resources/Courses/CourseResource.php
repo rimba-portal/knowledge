@@ -6,9 +6,11 @@ namespace Rimba\Knowledge\Http\UI\Staff\Resources\Courses;
 
 use BackedEnum;
 use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -22,44 +24,55 @@ class CourseResource extends Resource
 {
     protected static ?string $model = Course::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
+    protected static string|\UnitEnum|null $navigationGroup = 'Learning';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
+
+    protected static ?string $navigationLabel = 'My courses';
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?int $navigationSort = 20;
+
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([
-
-        ]);
+        return $schema->components([]);
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('code')->searchable(),
-            TextColumn::make('name')->searchable(),
+            TextColumn::make('code')->searchable()->copyable()->weight('semibold'),
+            TextColumn::make('name')->label('Course')->searchable(),
             TextColumn::make('modules_count')->counts('modules')->label('Modules'),
-        ])->recordActions([ViewAction::make()]);
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->where('status', 'active');
+            TextColumn::make('orgUnit.name')->label('Owner')->toggleable(),
+        ])->recordActions([ViewAction::make()])->defaultSort('code');
     }
 
     public static function infolist(Schema $schema): Schema
     {
         return $schema->components([
-            TextEntry::make('code'),
-            TextEntry::make('name'),
-            TextEntry::make('description')->columnSpanFull(),
-            RepeatableEntry::make('modules')->schema([
-                TextEntry::make('code'),
+            Section::make('Course')->schema([
+                TextEntry::make('code')->copyable(),
                 TextEntry::make('name'),
-            ])->columnSpanFull(),
+                TextEntry::make('orgUnit.name')->label('Owner'),
+                TextEntry::make('description')->columnSpanFull()->placeholder('—'),
+            ])->columns(2),
+            Section::make('Modules')->schema([
+                RepeatableEntry::make('courseModules')->label('')->schema([
+                    TextEntry::make('sequence')->label('#'),
+                    TextEntry::make('learningModule.code')->label('Code'),
+                    TextEntry::make('learningModule.name')->label('Learning module'),
+                    TextEntry::make('learningModule.estimated_minutes')->label('Duration')->suffix(' min')->placeholder('—'),
+                    IconEntry::make('is_required')->label('Required')->boolean(),
+                ])->columns(5)->columnSpanFull(),
+            ]),
         ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('status', 'active')->with(['orgUnit', 'courseModules.learningModule']);
     }
 
     public static function getPages(): array

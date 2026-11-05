@@ -10,7 +10,9 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -20,6 +22,8 @@ use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\CreateQualif
 use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\EditQualificationTest;
 use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\ListQualificationTests;
 use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\Pages\ViewQualificationTest;
+use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\RelationManagers\AttemptsRelationManager;
+use Rimba\Knowledge\Http\UI\Team\Resources\QualificationTests\RelationManagers\MaterialsRelationManager;
 use Rimba\Knowledge\Models\QualificationTest;
 
 class QualificationTestResource extends Resource
@@ -28,36 +32,72 @@ class QualificationTestResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Knowledge';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    protected static ?int $navigationSort = 40;
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('code')->required()->unique(ignoreRecord: true),
-            TextInput::make('name')->required(),
-            Textarea::make('description')->columnSpanFull(),
-            Select::make('org_unit_id')->relationship('orgUnit', 'name')->required()->searchable()->preload(),
-            Select::make('org_team_id')->relationship('orgTeam', 'name')->searchable()->preload(),
-            TextInput::make('job_role_uuid')->label('MES job-role UUID'),
-            TextInput::make('passing_score')->numeric()->minValue(0)->maxValue(100)->required(),
-            TextInput::make('question_limit')->numeric()->minValue(1),
-            TextInput::make('attempt_limit')->numeric()->minValue(1),
-            TextInput::make('validity_days')->numeric()->minValue(1),
-            Select::make('status')->options(LearningStatus::class)->required(),
+            Section::make('Qualification test')->schema([
+                TextInput::make('code')->required()->maxLength(255)->unique(ignoreRecord: true),
+                TextInput::make('name')->required()->maxLength(255),
+                Textarea::make('description')->rows(4)->columnSpanFull(),
+                TextInput::make('job_role_uuid')->label('MES job-role UUID')->uuid(),
+            ])->columns(2),
+            Section::make('Assessment settings')->schema([
+                TextInput::make('passing_score')->numeric()->minValue(0)->maxValue(100)->suffix('%')->required(),
+                TextInput::make('question_limit')->numeric()->minValue(1),
+                TextInput::make('attempt_limit')->numeric()->minValue(1),
+                TextInput::make('validity_days')->numeric()->minValue(1)->suffix('days'),
+            ])->columns(4),
+            Section::make('Ownership')->schema([
+                Select::make('org_unit_id')->label('Owning unit')->relationship('orgUnit', 'name')->required()->searchable()->preload(),
+                Select::make('org_team_id')->label('Managing team')->relationship('orgTeam', 'name')->searchable()->preload(),
+                Select::make('status')->options(LearningStatus::class)->default(LearningStatus::Draft->value)->required(),
+            ])->columns(2),
         ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('code')->searchable(),
-            TextColumn::make('name')->searchable(),
-            TextColumn::make('passing_score')->suffix('%'),
-            TextColumn::make('status')->badge(),
-            TextColumn::make('review_required_at')->dateTime(),
-        ])->recordActions([ViewAction::make(), EditAction::make()]);
+            TextColumn::make('code')->searchable()->sortable()->copyable()->weight('semibold'),
+            TextColumn::make('name')->label('Qualification test')->searchable()->sortable(),
+            TextColumn::make('passing_score')->label('Pass')->suffix('%'),
+            TextColumn::make('materials_count')->counts('materials')->label('Materials'),
+            TextColumn::make('status')->badge()->sortable(),
+            TextColumn::make('review_required_at')->label('Review due')->date()->placeholder('—')->toggleable(isToggledHiddenByDefault: true),
+        ])->recordActions([ViewAction::make(), EditAction::make()])->defaultSort('code');
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema->components([
+            Section::make('Qualification test')->schema([
+                TextEntry::make('code')->copyable(),
+                TextEntry::make('name'),
+                TextEntry::make('status')->badge(),
+                TextEntry::make('orgUnit.name')->label('Owning unit'),
+                TextEntry::make('description')->columnSpanFull()->placeholder('—'),
+            ])->columns(2),
+            Section::make('Assessment settings')->schema([
+                TextEntry::make('passing_score')->label('Passing score')->suffix('%'),
+                TextEntry::make('question_limit')->label('Question limit')->placeholder('All available'),
+                TextEntry::make('attempt_limit')->label('Attempt limit')->placeholder('Unlimited'),
+                TextEntry::make('validity_days')->label('Validity')->suffix(' days')->placeholder('No expiry'),
+            ])->columns(4),
+        ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            'materials' => MaterialsRelationManager::class,
+            'attempts' => AttemptsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
