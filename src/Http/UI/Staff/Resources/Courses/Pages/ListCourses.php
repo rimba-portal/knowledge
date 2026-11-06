@@ -11,6 +11,8 @@ class ListCourses extends ListRecords
 {
     protected static string $resource = CourseResource::class;
 
+    protected int|string|array $columnSpan = 'full';
+
     protected function getHeaderActions(): array
     {
         return [];
