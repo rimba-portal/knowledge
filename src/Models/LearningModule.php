@@ -6,12 +6,14 @@ namespace Rimba\Knowledge\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Rimba\Knowledge\Enums\LearningStatus;
+use Rimba\Knowledge\Enums\ModuleDomain;
 use Rimba\Organization\Models\OrgTeam;
 use Rimba\Organization\Models\OrgUnit;
 
@@ -35,6 +37,15 @@ class LearningModule extends Model
             'status' => LearningStatus::class,
             'estimated_minutes' => 'integer',
         ];
+    }
+
+    protected function moduleDomain(): Attribute
+    {
+        return Attribute::get(
+            fn (): ?ModuleDomain => ModuleDomain::fromModuleCode(
+                $this->code,
+            ),
+        );
     }
 
     public function orgUnit(): BelongsTo

@@ -6,11 +6,13 @@ namespace Rimba\Knowledge\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rimba\Knowledge\Enums\CourseType;
 use Rimba\Knowledge\Enums\LearningStatus;
 use Rimba\Organization\Models\OrgTeam;
 use Rimba\Organization\Models\OrgUnit;
@@ -33,6 +35,23 @@ class Course extends Model
         return [
             'status' => LearningStatus::class,
         ];
+    }
+
+    /**
+     * Determine the course purpose from its code prefix.
+     *
+     * Examples:
+     * IND-001 => Induction
+     * QLF-003 => Qualification
+     * CMP-001 => Compliance
+     */
+    protected function courseType(): Attribute
+    {
+        return Attribute::get(
+            fn (): ?CourseType => CourseType::fromCourseCode(
+                $this->code,
+            ),
+        );
     }
 
     public function orgUnit(): BelongsTo
