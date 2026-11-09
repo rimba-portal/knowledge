@@ -1,0 +1,12 @@
+[
+  {"code":"OPERATOR","name":"Operator"},
+  {"code":"MATERIAL_HANDLER","name":"Material Handler"},
+  {"code":"INSPECTOR","name":"Inspector"},
+  {"code":"MAINTAINER","name":"Maintainer"},
+  {"code":"ENGINEER","name":"Engineer"},
+  {"code":"SUPERVISOR","name":"Supervisor"},
+  {"code":"PROCESS_OWNER","name":"Process Owner"},
+  {"code":"RESOURCE_OWNER","name":"Resource Owner"},
+  {"code":"QUALIFIER","name":"Qualifier"},
+  {"code":"APPROVER","name":"Approver"}
+]

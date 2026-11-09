@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Rimba\Knowledge\Concerns\InteractsWithKnowledgeApplicabilities;
 use Rimba\Knowledge\Enums\DocumentStatus;
 use Rimba\Organization\Models\OrgTeam;
 use Rimba\Organization\Models\OrgUnit;
@@ -30,6 +31,7 @@ use Rimba\Organization\Models\OrgUnit;
 class Document extends Model
 {
     use HasUuids;
+    use InteractsWithKnowledgeApplicabilities;
     use SoftDeletes;
 
     protected function casts(): array

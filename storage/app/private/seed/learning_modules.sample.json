@@ -1,0 +1,6 @@
+[
+  {"code":"LM-DA-OPS","name":"Die Attach Operations"},
+  {"code":"LM-DB-OPS","name":"Die Bonder Operation"},
+  {"code":"LM-WB-INSP","name":"Wire Bond Visual Inspection"},
+  {"code":"LM-DB-MAINT","name":"Die Bonder Maintenance"}
+]

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Rimba\Knowledge\Concerns\InteractsWithKnowledgeApplicabilities;
 use Rimba\Knowledge\Enums\LearningStatus;
 use Rimba\Knowledge\Enums\ModuleDomain;
 use Rimba\Organization\Models\OrgTeam;
@@ -30,6 +31,7 @@ use Rimba\Organization\Models\OrgUnit;
 class LearningModule extends Model
 {
     use HasUuids;
+    use InteractsWithKnowledgeApplicabilities;
 
     protected function casts(): array
     {

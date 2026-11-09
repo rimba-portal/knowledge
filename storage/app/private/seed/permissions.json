@@ -1,0 +1,13 @@
+[
+  {"name":"knowledge.view","guard_name":"web"},
+  {"name":"knowledge.manage","guard_name":"web"},
+  {"name":"document.author","guard_name":"web"},
+  {"name":"document.review","guard_name":"web"},
+  {"name":"document.approve","guard_name":"web"},
+  {"name":"document.publish","guard_name":"web"},
+  {"name":"learning.assign","guard_name":"web"},
+  {"name":"learning.train","guard_name":"web"},
+  {"name":"learning.assess","guard_name":"web"},
+  {"name":"learning.qualify","guard_name":"web"},
+  {"name":"learning.administer","guard_name":"web"}
+]

@@ -1,0 +1,8 @@
+[
+  {"name":"staff","guard_name":"web"},
+  {"name":"team_lead","guard_name":"web"},
+  {"name":"supervisor","guard_name":"web"},
+  {"name":"manager","guard_name":"web"},
+  {"name":"director","guard_name":"web"},
+  {"name":"system_administrator","guard_name":"web"}
+]

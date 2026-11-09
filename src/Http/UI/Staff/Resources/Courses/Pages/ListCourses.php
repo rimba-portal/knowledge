@@ -27,9 +27,9 @@ class ListCourses extends ListRecords
     {
         $courseTypeCounts = $this->getCourseTypeCounts();
 
-        foreach (CourseType::orderedCases() as $type) {
-            if (($courseTypeCounts[$type->value] ?? 0) > 0) {
-                return $type->value;
+        foreach (CourseType::orderedCases() as $courseType) {
+            if (($courseTypeCounts[$courseType->value] ?? 0) > 0) {
+                return $courseType->value;
             }
         }
 
@@ -53,8 +53,8 @@ class ListCourses extends ListRecords
                 ),
         ];
 
-        foreach (CourseType::orderedCases() as $type) {
-            $count = (int) ($courseTypeCounts[$type->value] ?? 0);
+        foreach (CourseType::orderedCases() as $courseType) {
+            $count = (int) ($courseTypeCounts[$courseType->value] ?? 0);
 
             /*
              * Avoid showing tabs which have no courses.
@@ -63,17 +63,17 @@ class ListCourses extends ListRecords
                 continue;
             }
 
-            $tabs[$type->value] = Tab::make($type->getLabel())
-                ->icon($type->getIcon())
+            $tabs[$courseType->value] = Tab::make($courseType->getLabel())
+                ->icon($courseType->getIcon())
                 ->badge($count)
-                ->badgeColor($type->getColor())
+                ->badgeColor($courseType->getColor())
                 ->modifyQueryUsing(
                     fn (Builder $query): Builder => $this
                         ->activeCourses($query)
                         ->where(
                             $query->qualifyColumn('code'),
                             'like',
-                            $type->getCodePattern(),
+                            $courseType->getCodePattern(),
                         ),
                 );
         }

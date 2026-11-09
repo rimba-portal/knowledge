@@ -13,23 +13,14 @@ use Filament\Support\Contracts\HasLabel;
 enum CourseType: string implements HasColor, HasDescription, HasIcon, HasLabel
 {
     case STANDARD = 'standard';
-
     case INDUCTION = 'induction';
-
     case ONBOARDING = 'onboarding';
-
     case QUALIFICATION = 'qualification';
-
     case COMPLIANCE = 'compliance';
-
     case REFRESHER = 'refresher';
-
     case RECERTIFICATION = 'recertification';
-
     case TRANSITION = 'transition';
-
     case CROSS_TRAINING = 'cross_training';
-
     case DEVELOPMENT = 'development';
 
     public function getLabel(): string
@@ -51,13 +42,13 @@ enum CourseType: string implements HasColor, HasDescription, HasIcon, HasLabel
     public function getDescription(): string
     {
         return match ($this) {
-            self::STANDARD => 'General structured learning that is not tied to a formal qualification, compliance, renewal, or role-change requirement.',
+            self::STANDARD => 'General structured learning not tied to a formal qualification, compliance, renewal, or role-change requirement.',
 
             self::INDUCTION => 'Introduces Staff to the company, manufacturing site, workplace requirements, facilities, safety expectations, and local practices.',
 
             self::ONBOARDING => 'Prepares Staff to join a specific OrgUnit, OrgTeam, operational function, or professional discipline.',
 
-            self::QUALIFICATION => 'Establishes the knowledge and competency required to perform a defined job role, operation, or controlled work scope.',
+            self::QUALIFICATION => 'Establishes the knowledge and competency required to perform a defined job role, responsibility, operation, or controlled work scope.',
 
             self::COMPLIANCE => 'Mandatory learning required by company policy, regulation, quality systems, safety standards, environmental controls, or information-security obligations.',
 
@@ -105,12 +96,6 @@ enum CourseType: string implements HasColor, HasDescription, HasIcon, HasLabel
         };
     }
 
-    /**
-     * Stable prefix used by Course.code.
-     *
-     * Examples:
-     * STD-001, IND-001, QLF-003.
-     */
     public function getCode(): string
     {
         return match ($this) {
@@ -127,20 +112,11 @@ enum CourseType: string implements HasColor, HasDescription, HasIcon, HasLabel
         };
     }
 
-    /**
-     * Prefix expression used by database queries.
-     */
     public function getCodePattern(): string
     {
         return $this->getCode().'-%';
     }
 
-    /**
-     * Resolve a CourseType from a full course code.
-     *
-     * CourseType::fromCourseCode('QLF-003')
-     * returns CourseType::QUALIFICATION.
-     */
     public static function fromCourseCode(?string $code): ?self
     {
         if (blank($code)) {
@@ -164,7 +140,7 @@ enum CourseType: string implements HasColor, HasDescription, HasIcon, HasLabel
     }
 
     /**
-     * Cases in the order they should appear to Staff.
+     * @return array<int, self>
      */
     public static function orderedCases(): array
     {
@@ -182,9 +158,6 @@ enum CourseType: string implements HasColor, HasDescription, HasIcon, HasLabel
         ];
     }
 
-    /**
-     * Convenience options for Filament Select components.
-     */
     public static function options(): array
     {
         return collect(self::orderedCases())

@@ -1,0 +1,7 @@
+[
+  {"staff":"HAFIZ","job_role":"OPERATOR","scope_type":"work_unit","scope":"DA-CELL-01"},
+  {"staff":"HAFIZ","job_role":"MATERIAL_HANDLER","scope_type":"work_unit","scope":"DA-CELL-01"},
+  {"staff":"SITI","job_role":"INSPECTOR","scope_type":"process_segment","scope":"WIRE_BOND"},
+  {"staff":"FIRDAUS","job_role":"MAINTAINER","scope_type":"equipment_class","scope":"DIE_BONDER"},
+  {"staff":"ZULKIFLI","job_role":"SUPERVISOR","scope_type":"work_center","scope":"A1-ASM-01"}
+]

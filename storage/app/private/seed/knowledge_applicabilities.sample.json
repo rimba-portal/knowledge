@@ -1,0 +1,7 @@
+[
+  {"knowledge_type":"document","knowledge":"WI-DA-001","job_role":"OPERATOR","scope_type":"process_segment","scope":"DIE_ATTACH","requirement":"required"},
+  {"knowledge_type":"document","knowledge":"WI-WB-001","job_role":"INSPECTOR","scope_type":"process_segment","scope":"WIRE_BOND","requirement":"required"},
+  {"knowledge_type":"learning_module","knowledge":"LM-DB-OPS","job_role":"OPERATOR","scope_type":"equipment_class","scope":"DIE_BONDER","requirement":"qualifying"},
+  {"knowledge_type":"learning_module","knowledge":"LM-WB-INSP","job_role":"INSPECTOR","scope_type":"process_segment","scope":"WIRE_BOND","requirement":"qualifying"},
+  {"knowledge_type":"learning_module","knowledge":"LM-DB-MAINT","job_role":"MAINTAINER","scope_type":"equipment_class","scope":"DIE_BONDER","requirement":"qualifying"}
+]

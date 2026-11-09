@@ -1,0 +1,8 @@
+[
+  {"role":"staff","permissions":["knowledge.view"]},
+  {"role":"team_lead","permissions":["knowledge.view"]},
+  {"role":"supervisor","permissions":["knowledge.view","learning.assign"]},
+  {"role":"manager","permissions":["knowledge.view","learning.assign"]},
+  {"role":"director","permissions":["knowledge.view"]},
+  {"role":"system_administrator","permissions":["knowledge.manage","knowledge.view"]}
+]

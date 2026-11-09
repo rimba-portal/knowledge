@@ -38,6 +38,10 @@ enum ModuleDomain: string implements HasColor, HasDescription, HasIcon, HasLabel
     case NEW_PRODUCT_INTRODUCTION = 'new_product_introduction';
     case DOCUMENT_MANAGEMENT = 'document_management';
     case LEARNING = 'learning';
+    case PEOPLE_MANAGEMENT = 'people_management';
+    case RESOURCE_MANAGEMENT = 'resource_management';
+    case OPERATIONS_MANAGEMENT = 'operations_management';
+    case PROJECT_MANAGEMENT = 'project_management';
 
     public function getLabel(): string
     {
@@ -68,6 +72,10 @@ enum ModuleDomain: string implements HasColor, HasDescription, HasIcon, HasLabel
             self::NEW_PRODUCT_INTRODUCTION => 'New Product Introduction',
             self::DOCUMENT_MANAGEMENT => 'Document Management',
             self::LEARNING => 'Learning & Development',
+            self::PEOPLE_MANAGEMENT => 'People Management',
+            self::RESOURCE_MANAGEMENT => 'Resource Management',
+            self::OPERATIONS_MANAGEMENT => 'Operations Management',
+            self::PROJECT_MANAGEMENT => 'Project Management',
         };
     }
 
@@ -125,6 +133,14 @@ enum ModuleDomain: string implements HasColor, HasDescription, HasIcon, HasLabel
             self::DOCUMENT_MANAGEMENT => 'Controlled-document creation, review, approval, revision, publication, traceability, and training-impact assessment.',
 
             self::LEARNING => 'Learning administration, training-material development, qualification management, assessment, completion, and recertification.',
+
+            self::PEOPLE_MANAGEMENT => 'Managing people through accountability, workforce planning, delegation, performance management, coaching, competency development, communication, engagement, conduct, and succession.',
+
+            self::RESOURCE_MANAGEMENT => 'Managing non-human company resources including time, capacity, equipment, assets, materials, inventory, facilities, utilities, budgets, constraints, allocation, utilization, and optimization.',
+
+            self::OPERATIONS_MANAGEMENT => 'Running recurring day-to-day operations through planning, prioritization, coordination, performance control, escalation, issue management, operational handover, and continuous improvement.',
+
+            self::PROJECT_MANAGEMENT => 'Managing temporary projects and initiatives through objectives, scope, planning, scheduling, resources, costs, risks, issues, changes, stakeholders, implementation, governance, handover, and closure.',
         };
     }
 
@@ -157,6 +173,10 @@ enum ModuleDomain: string implements HasColor, HasDescription, HasIcon, HasLabel
             self::NEW_PRODUCT_INTRODUCTION => 'heroicon-o-rocket-launch',
             self::DOCUMENT_MANAGEMENT => 'heroicon-o-document-text',
             self::LEARNING => 'heroicon-o-academic-cap',
+            self::PEOPLE_MANAGEMENT => 'heroicon-o-user-group',
+            self::RESOURCE_MANAGEMENT => 'heroicon-o-cube-transparent',
+            self::OPERATIONS_MANAGEMENT => 'heroicon-o-cog-8-tooth',
+            self::PROJECT_MANAGEMENT => 'heroicon-o-clipboard-document-check',
         };
     }
 
@@ -189,15 +209,14 @@ enum ModuleDomain: string implements HasColor, HasDescription, HasIcon, HasLabel
             self::NEW_PRODUCT_INTRODUCTION => 'fuchsia',
             self::DOCUMENT_MANAGEMENT => 'gray',
             self::LEARNING => 'primary',
+
+            self::PEOPLE_MANAGEMENT => 'blue',
+            self::RESOURCE_MANAGEMENT => 'cyan',
+            self::OPERATIONS_MANAGEMENT => 'success',
+            self::PROJECT_MANAGEMENT => 'warning',
         };
     }
 
-    /**
-     * Stable prefix used by LearningModule.code.
-     *
-     * Examples:
-     * SAF-001, MFG-003, DOC-006.
-     */
     public function getCode(): string
     {
         return match ($this) {
@@ -227,6 +246,11 @@ enum ModuleDomain: string implements HasColor, HasDescription, HasIcon, HasLabel
             self::NEW_PRODUCT_INTRODUCTION => 'NPI',
             self::DOCUMENT_MANAGEMENT => 'DOC',
             self::LEARNING => 'LRN',
+
+            self::PEOPLE_MANAGEMENT => 'PEO',
+            self::RESOURCE_MANAGEMENT => 'RES',
+            self::OPERATIONS_MANAGEMENT => 'OPS',
+            self::PROJECT_MANAGEMENT => 'PRJ',
         };
     }
 
@@ -258,17 +282,16 @@ enum ModuleDomain: string implements HasColor, HasDescription, HasIcon, HasLabel
     }
 
     /**
-     * Manufacturing-oriented display order.
-     *
-     * This keeps execution domains together and moves supporting
-     * enterprise domains after the manufacturing core.
-     *
      * @return array<int, self>
      */
     public static function orderedCases(): array
     {
         return [
             self::GENERAL,
+            self::PEOPLE_MANAGEMENT,
+            self::RESOURCE_MANAGEMENT,
+            self::OPERATIONS_MANAGEMENT,
+            self::PROJECT_MANAGEMENT,
             self::SAFETY,
             self::QUALITY,
             self::PRODUCTION,
