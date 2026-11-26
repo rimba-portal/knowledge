@@ -12,7 +12,6 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,9 +24,13 @@ class QualificationTestResource extends Resource
 {
     protected static ?string $model = QualificationTest::class;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Qualifications';
+    protected static string|BackedEnum|null $navigationIcon =
+        'bites-lms-attempt';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
+    protected static string|\UnitEnum|null $navigationGroup =
+        'Learning';
+
+    protected static ?int $navigationSort = 40;
 
     protected static ?string $recordTitleAttribute = 'name';
 

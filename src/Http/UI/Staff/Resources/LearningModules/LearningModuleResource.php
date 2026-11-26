@@ -6,7 +6,10 @@ namespace Rimba\Knowledge\Http\UI\Staff\Resources\LearningModules;
 
 use BackedEnum;
 use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\IconColumn;
@@ -14,9 +17,12 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Rimba\Knowledge\Enums\LearningStatus;
 use Rimba\Knowledge\Enums\ModuleDomain;
 use Rimba\Knowledge\Http\UI\Staff\Resources\LearningModules\Pages\ListLearningModules;
 use Rimba\Knowledge\Http\UI\Staff\Resources\LearningModules\Pages\ViewLearningModule;
+use Rimba\Knowledge\Http\UI\Staff\Resources\LearningModules\RelationManagers\MaterialsRelationManager;
 use Rimba\Knowledge\Models\LearningModule;
 use UnitEnum;
 
@@ -24,9 +30,11 @@ class LearningModuleResource extends Resource
 {
     protected static ?string $model = LearningModule::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'bites-lms-module';
+    protected static string|BackedEnum|null $navigationIcon =
+        'bites-lms-module';
 
-    protected static string|UnitEnum|null $navigationGroup = 'Learning';
+    protected static string|UnitEnum|null $navigationGroup =
+        'Learning';
 
     protected static ?int $navigationSort = 30;
 
@@ -44,92 +52,117 @@ class LearningModuleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(
-                LearningModule::query()
-                    ->withCount([
-                        'courses',
-                        'documentRevisions',
-                    ]),
-            )
             ->recordUrl(
-                fn (LearningModule $record): string => static::getUrl('view', [
-                    'record' => $record->code,
-                ]),
+                fn (LearningModule $record): string => static::getUrl(
+                    'view',
+                    [
+                        'record' => $record->code,
+                    ],
+                ),
             )
             ->columns([
-                TextColumn::make('module_domain')
-                    ->label('Domain')
-                    ->badge()
-                    ->alignEnd()
-                    ->formatStateUsing(
-                        fn (?ModuleDomain $state): string => $state?->getLabel() ?? 'Other',
-                    )
-                    ->icon(
-                        fn (?ModuleDomain $state): string|BackedEnum|null => $state?->getIcon(),
-                    )
-                    ->color(
-                        fn (?ModuleDomain $state): string|array|null => $state?->getColor(),
-                    )
-                    ->tooltip(
-                        fn (?ModuleDomain $state): ?string => $state?->getDescription(),
-                    ),
+                Stack::make([
+                    TextColumn::make('orgUnit.code')
+                        ->label('Owning unit')
+                        ->badge()
+                        ->color('gray')
+                        ->placeholder('Enterprise'),
 
-                Split::make([
-                    IconColumn::make('module_domain')
-                        ->label('')
-                        ->icon(
-                            fn (?ModuleDomain $state): string|BackedEnum => $state?->getIcon()
-                                ?? 'heroicon-o-book-open',
-                        )
-                        ->color(
-                            fn (?ModuleDomain $state): string|array|null => $state?->getColor(),
-                        )
-                        ->tooltip(
-                            fn (?ModuleDomain $state): ?string => $state?->getDescription(),
-                        )
-                        ->grow(false),
-
-                    Stack::make([
-                        TextColumn::make('name')
-                            ->label('Module')
-                            ->searchable()
-                            ->weight(FontWeight::SemiBold)
+                    TextColumn::make('orgTeam.code')
+                        ->label('Managing team')
+                        ->badge()
+                        ->color('gray')
+                        ->alignEnd(),
+                    Split::make([
+                        IconColumn::make('module_domain')
+                            ->label('')
+                            ->icon(
+                                fn (?ModuleDomain $state): string|BackedEnum => $state?->getIcon()
+                                    ?? 'heroicon-o-book-open',
+                            )
                             ->color(
-                                fn (LearningModule $record): string|array|null => $record->module_domain?->getColor(),
-                            ),
+                                fn (?ModuleDomain $state): string|array|null => $state?->getColor(),
+                            )
+                            ->tooltip(
+                                fn (?ModuleDomain $state): ?string => $state?->getDescription(),
+                            )
+                            ->grow(false),
 
-                        TextColumn::make('code')
-                            ->size(TextSize::ExtraSmall)
-                            ->color('gray')
-                            ->copyable(),
+                        Stack::make([
+                            TextColumn::make('name')
+                                ->label('Module')
+                                ->searchable()
+                                ->weight(FontWeight::SemiBold)
+                                ->color(
+                                    fn (
+                                        LearningModule $record,
+                                    ): string|array|null => $record->module_domain?->getColor(),
+                                ),
 
-                        TextColumn::make('description')
-                            ->size(TextSize::ExtraSmall)
-                            ->searchable()
-                            ->wrap()
-                            ->limit(150),
+                            TextColumn::make('code')
+                                ->size(TextSize::ExtraSmall)
+                                ->color('gray')
+                                ->copyable(),
 
-                        TextColumn::make('estimated_minutes')
-                            ->label('Duration')
-                            ->size(TextSize::ExtraSmall)
-                            ->icon('heroicon-o-clock')
-                            ->formatStateUsing(
-                                fn (?int $state): string => $state
+                            TextColumn::make('description')
+                                ->size(TextSize::ExtraSmall)
+                                ->searchable()
+                                ->wrap()
+                                ->limit(150),
+
+                            TextColumn::make('estimated_minutes')
+                                ->label('Duration')
+                                ->size(TextSize::ExtraSmall)
+                                ->icon('heroicon-o-clock')
+                                ->formatStateUsing(
+                                    fn (?int $state): string => $state
                                         ? "{$state} min"
                                         : 'Duration not set',
-                            )
-                            ->color('gray'),
+                                )
+                                ->color('gray'),
+                        ]),
                     ]),
-                ]),
+                ])
+                    ->space(3),
             ])
-            ->recordActions([
-                ViewAction::make(),
-            ])
+            // ->recordActions([
+            //     ViewAction::make(),
+            // ])
             ->paginated(false)
             ->contentGrid([
                 'md' => 1,
                 'xl' => 4,
             ]);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema->components([
+            Section::make('Learning module')->schema([
+                TextEntry::make('code')->copyable(),
+                TextEntry::make('name'),
+                TextEntry::make('status')->badge(),
+                TextEntry::make('estimated_minutes')->label('Estimated duration')->suffix(' minutes')->placeholder('—'),
+                TextEntry::make('orgUnit.name')->label('Owning unit'),
+                TextEntry::make('orgTeam.name')->label('Managing team')->placeholder('—'),
+                TextEntry::make('description')->columnSpanFull()->placeholder('—'),
+            ])->columns(2),
+        ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('status', LearningStatus::Active->value)
+            ->withCount([
+                'courses',
+                'documentRevisions',
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return ['materials' => MaterialsRelationManager::class];
     }
 
     public static function getPages(): array

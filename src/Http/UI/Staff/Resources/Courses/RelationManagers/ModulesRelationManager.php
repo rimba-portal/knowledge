@@ -23,9 +23,8 @@ class ModulesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->defaultSort('sequence')
             ->columns([
-                TextColumn::make('sequence')
+                TextColumn::make('pivot.sequence')
                     ->label('#')
                     ->alignCenter(),
 
@@ -47,14 +46,12 @@ class ModulesRelationManager extends RelationManager
                     ->label('Duration')
                     ->alignEnd()
                     ->formatStateUsing(
-                        fn (
-                            int|string|null $state,
-                        ): string => filled($state)
-                            ? sprintf('%d min', (int) $state)
-                            : 'Self-paced',
+                        fn (int|string|null $state): string => filled($state)
+                                ? sprintf('%d min', (int) $state)
+                                : 'Self-paced',
                     ),
 
-                IconColumn::make('is_required')
+                IconColumn::make('pivot.is_required')
                     ->label('Required')
                     ->boolean()
                     ->alignCenter(),
