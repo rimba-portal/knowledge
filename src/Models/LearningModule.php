@@ -69,4 +69,19 @@ class LearningModule extends Model
     {
         return $this->belongsToMany(DocumentRevision::class, 'kn_module_documents')->withPivot(['sequence', 'is_required', 'completion_rule'])->withTimestamps();
     }
+
+    public function courses(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Course::class,
+            'kn_course_modules',
+            'learning_module_id',
+            'course_id',
+        )
+            ->withPivot([
+                'sequence',
+                'is_required',
+            ])
+            ->withTimestamps();
+    }
 }
